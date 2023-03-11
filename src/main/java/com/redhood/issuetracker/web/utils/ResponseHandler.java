@@ -8,11 +8,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseHandler {
-
+    //------------------------------------------------------------------------------------------------------------------
+    // Fields
+    //------------------------------------------------------------------------------------------------------------------
     public static final String HTTPSTATUS_OK = "Success!";
     public static final String HTTPSTATUS_NOT_FOUND = "Not found!";
     public static final String HTTPSTATUS_BAD_REQUEST = "Bad request!";
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Methods
+    //------------------------------------------------------------------------------------------------------------------
+    /**
+     * Supporting methods to provide response handler.
+     */
     public static ResponseEntity<Object> generateResponse(String message, HttpStatus status) {
         return generateResponse(null, message, status, null);
     }
@@ -29,6 +39,16 @@ public class ResponseHandler {
         return generateResponse(httpHeaders,null, status, responseObj);
     }
 
+    /**
+     * Main method to provide response handler. Depending on chosen method,
+     * return {@link ResponseEntity} - JSON object with {@code message"}, {@code status} and {@code data}.
+     * Also set up http headers and response status from {@link HttpStatus} enum.
+     * @param httpHeaders
+     * @param message custom message
+     * @param status {@link HttpStatus} of request
+     * @param responseObj object containing data
+     * @return {@link ResponseEntity} with JSON object with {@code message"}, {@code status} and {@code data}.
+     */
     public static ResponseEntity<Object> generateResponse(HttpHeaders httpHeaders, String message, HttpStatus status, Object responseObj) {
         Map<String, Object> map = new HashMap<String, Object>();
         if (status.equals(HttpStatus.OK)) {
@@ -50,11 +70,22 @@ public class ResponseHandler {
         }
         return new ResponseEntity<Object>(map, httpHeaders,status);
     }
+
+    /**
+     * Method return response whem JWT was created. When JWT token is added to cookies, additionaly generate response
+     * with {@code JWT} and {@code customClaims}, to handle user privileges.
+     * @param httpHeaders
+     * @param message
+     * @param status
+     * @param responseObj
+     * @param customClaims
+     * @return {@link ResponseEntity} with JSON object with {@code message"}, {@code status} and {@code data}.
+     */
     public static ResponseEntity<Object> generateResponseJWT(HttpHeaders httpHeaders, String message, HttpStatus status, Object responseObj, Object customClaims) {
         Map<String, Object> map = new HashMap<String, Object>();
 
         //TODO: generateResponseJWT
         return new ResponseEntity<Object>(map, httpHeaders, status);
     }
-
+    //------------------------------------------------------------------------------------------------------------------
 }

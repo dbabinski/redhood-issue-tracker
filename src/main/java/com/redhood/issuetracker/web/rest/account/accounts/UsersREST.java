@@ -16,21 +16,29 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/admin", produces="application/json")
 public class UsersREST {
-
+    //------------------------------------------------------------------------------------------------------------------
+    // Fields
+    //------------------------------------------------------------------------------------------------------------------
     private final Logger log = LoggerFactory.getLogger(UsersREST.class);
-
     private AccountsService accountsService;
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Constructor
+    //------------------------------------------------------------------------------------------------------------------
     @Autowired
     public UsersREST(AccountsService accountsService) {
         this.accountsService = accountsService;
     }
-
     //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // REST Controller - GET
+    //------------------------------------------------------------------------------------------------------------------
     /**
      * {@code GET /api/admin/account/accounts} : get all users with all the details - calling this are only allowed for the administrators.
-     *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body containing data (all users), message and transaction status.
      */
 
@@ -45,11 +53,10 @@ public class UsersREST {
     }
 
     /**
-     *  {@code GET /api/admin/account/accounts/{login}} : get user with specific "login".
+     * {@code GET /api/admin/account/accounts/{login}} : get user with specific "login".
      * @param login the login of the user to find.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body containing data (user), message and transaction status.
+     * @return the {@link ResponseEntity} with status {@code 200(OK)} and with body containing data (user), message and transaction status.
      */
-
     @GetMapping("/account/accounts/{login}")
     public ResponseEntity getAccount(@PathVariable @Pattern(regexp = Accounts.LOGIN_REGEX) String login) {
         final Accounts account = accountsService.findByLogin(login);
@@ -58,7 +65,12 @@ public class UsersREST {
         }
         return ResponseHandler.generateResponse(HttpStatus.OK, account);
     }
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // REST Controller - POST
+    //------------------------------------------------------------------------------------------------------------------
     /**
      * {@code POST /api/admin/account/accounts} : Creates new user.
      * <p>
@@ -83,7 +95,7 @@ public class UsersREST {
         }
         return ResponseHandler.generateResponse();
 
-        //
+
         log.debug("REST request to save User : {}", userDTO);
 
         if (userDTO.getId() != null) {
@@ -103,7 +115,7 @@ public class UsersREST {
                     )
                     .body(newUser);
         }
-        //
+
 
     }
 
@@ -118,14 +130,22 @@ public class UsersREST {
     }
 
     */
+    //------------------------------------------------------------------------------------------------------------------
+    // REST Controller - PUT
+    //------------------------------------------------------------------------------------------------------------------
     /*
     @PutMapping("/account/accounts/")
     public Accounts updateAccount(@RequestBody Accounts accounts) {
         accountsService.save(accounts);
         return accounts;
     }
-
     */
+    //------------------------------------------------------------------------------------------------------------------
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    // REST Controller - DELETE
+    //------------------------------------------------------------------------------------------------------------------
     /*
     @DeleteMapping("/account/accounts/{accountId}")
     public String deleteAccount(@PathVariable int accountId) {
@@ -137,9 +157,7 @@ public class UsersREST {
             accountsService.deleteById(accountId);
             return "Deleted customer id: " + accountId;
         }
-
     }
-
     */
-
+    //------------------------------------------------------------------------------------------------------------------
 }

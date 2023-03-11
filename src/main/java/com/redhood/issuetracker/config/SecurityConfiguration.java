@@ -12,12 +12,14 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configure authorization http requests
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();

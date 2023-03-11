@@ -10,7 +10,9 @@ import java.io.Serializable;
 import java.time.Instant;
 
 public class AccountsDTO implements Serializable {
-
+    //------------------------------------------------------------------------------------------------------------------
+    // Fields
+    //------------------------------------------------------------------------------------------------------------------
     private static final long serialVersionUID = 1L;
     public static final String LOGIN_REGEX = "^(?>[a-zA-Z0-9!$&*+=?^_`{|}~.-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)|(?>[_.@A-Za-z0-9-]+)$";
 
@@ -40,7 +42,12 @@ public class AccountsDTO implements Serializable {
     private String lastModifiedBy;
 
     private Instant lastModifiedDate;
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Constructor
+    //------------------------------------------------------------------------------------------------------------------
     public AccountsDTO() {
     }
 
@@ -56,7 +63,12 @@ public class AccountsDTO implements Serializable {
         this.lastModifiedBy = accounts.getLastModifiedBy();
         this.lastModifiedDate = accounts.getLastModifiedDate();
     }
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Getters and Setters
+    //------------------------------------------------------------------------------------------------------------------
     public Integer getId() {
         return id;
     }
@@ -136,7 +148,12 @@ public class AccountsDTO implements Serializable {
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Object
+    //------------------------------------------------------------------------------------------------------------------
     @Override
     public String toString() {
         return "com.redhood.issuetracker.service.account.dto.AccountsDTO{" +
@@ -152,4 +169,5 @@ public class AccountsDTO implements Serializable {
                 ", lastModifiedDate='" + lastModifiedDate + '\'' +
                 '}';
     }
+    //------------------------------------------------------------------------------------------------------------------
 }

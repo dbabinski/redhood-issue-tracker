@@ -25,20 +25,32 @@ import java.util.Optional;
 @Service
 @Transactional
 public class AccountsService implements UserDetailsService {
-
+    //------------------------------------------------------------------------------------------------------------------
+    // Fields
+    //------------------------------------------------------------------------------------------------------------------
     private final Logger log = LoggerFactory.getLogger(AccountsService.class);
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private final AccountsRepository accountsRepository;
     private final PasswordEncoder passwordEncoder;
     private final Accounts accounts;
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Constructor
+    //------------------------------------------------------------------------------------------------------------------
     @Autowired
     public AccountsService(AccountsRepository accountsRepository, PasswordEncoder passwordEncoder, Accounts accounts) {
         this.accountsRepository = accountsRepository;
         this.passwordEncoder = passwordEncoder;
         this.accounts = accounts;
     }
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Methods
+    //------------------------------------------------------------------------------------------------------------------
     /**
      * Activate user with registration key.
      * @param key registration key
@@ -281,8 +293,6 @@ public class AccountsService implements UserDetailsService {
     }
      */
 
-    //------------------------------------------------------------------------------------------------
-
     /**
      * Method generate random key.
      * @return {@link String} - randomly generated key.
@@ -290,7 +300,12 @@ public class AccountsService implements UserDetailsService {
     public static String generateRandomKey() {
         return RandomStringUtils.random(20, 0, 0, true, true, (char[])null, SECURE_RANDOM);
     }
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // UserDetailsService
+    //------------------------------------------------------------------------------------------------------------------
     /**
      * Find account with given username (login).
      * @param username - username or login.
@@ -300,4 +315,5 @@ public class AccountsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return accountsRepository.findOneByLogin(username).orElseThrow(() -> new UsernameNotFoundException("Could not find user!"));
     }
+    //------------------------------------------------------------------------------------------------------------------
 }

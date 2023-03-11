@@ -10,14 +10,26 @@ import java.util.Optional;
 
 @Service
 public class PermissionsServiceImpl implements PermissionsService{
-
+    //------------------------------------------------------------------------------------------------------------------
+    // Fields
+    //------------------------------------------------------------------------------------------------------------------
     private PermissionsRepository permissionsRepository;
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Constructor
+    //------------------------------------------------------------------------------------------------------------------
     @Autowired
     public PermissionsServiceImpl(PermissionsRepository permissionsRepository) {
         this.permissionsRepository = permissionsRepository;
     }
+    //------------------------------------------------------------------------------------------------------------------
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // PermissionsService interface
+    //------------------------------------------------------------------------------------------------------------------
     @Override
     public List<Permissions> findAll() {
         return permissionsRepository.findAll();
@@ -40,4 +52,5 @@ public class PermissionsServiceImpl implements PermissionsService{
     public void deleteById(int id) {
         permissionsRepository.deleteById(id);
     }
+    //------------------------------------------------------------------------------------------------------------------
 }

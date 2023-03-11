@@ -7,23 +7,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class JWTPropertiesConfiguration {
 
     private String secret;
-
     private String tokenValidity;
-
     private String tokenValidityForRememberMe;
 
     public String getSecret() {
         return secret;
     }
-
     public void setSecret(String secret) {
         this.secret = secret;
     }
-
     public String getTokenValidity() {
         return tokenValidity;
     }
-
     public void setTokenValidity(String tokenValidity) {
         this.tokenValidity = tokenValidity;
     }
