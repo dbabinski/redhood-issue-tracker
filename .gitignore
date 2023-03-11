@@ -1,0 +1,32 @@
+.idea
+.mvn
+target
+# Logs
+/src/main/resources/fronted/issue-tracker/logs
+/src/main/resources/fronted/issue-tracker/*.log
+/src/main/resources/fronted/issue-tracker/npm-debug.log*
+/src/main/resources/fronted/issue-tracker/yarn-debug.log*
+/src/main/resources/fronted/issue-tracker/yarn-error.log*
+/src/main/resources/fronted/issue-tracker/pnpm-debug.log*
+/src/main/resources/fronted/issue-tracker/lerna-debug.log*
+
+/src/main/resources/fronted/issue-tracker/node_modules
+/src/main/resources/fronted/issue-tracker/.DS_Store
+/src/main/resources/fronted/issue-tracker/dist
+/src/main/resources/fronted/issue-tracker/dist-ssr
+/src/main/resources/fronted/issue-tracker/coverage
+/src/main/resources/fronted/issue-tracker/*.local
+
+/src/main/resources/fronted/issue-tracker//cypress/videos/
+/src/main/resources/fronted/issue-tracker//cypress/screenshots/
+
+# Editor directories and files
+/src/main/resources/fronted/issue-tracker/.vscode/*
+!.vscode/extensions.json
+/src/main/resources/fronted/issue-tracker/.idea
+/src/main/resources/fronted/issue-tracker/*.suo
+/src/main/resources/fronted/issue-tracker/*.ntvs*
+/src/main/resources/fronted/issue-tracker/*.njsproj
+/src/main/resources/fronted/issue-tracker/*.sln
+/src/main/resources/fronted/issue-tracker/*.sw?
+
