@@ -1,6 +1,6 @@
 package com.redhood.issuetracker.web.rest.account.accounts;
 
-import com.redhood.issuetracker.security.jwt.CustomClaims;
+import com.redhood.issuetracker.security.jwt.ClaimsExt;
 import com.redhood.issuetracker.security.jwt.TokenProvider;
 import com.redhood.issuetracker.service.account.dto.UserDTO;
 import com.redhood.issuetracker.web.utils.ResponseHandler;
@@ -28,13 +28,13 @@ public class AuthREST {
     //------------------------------------------------------------------------------------------------------------------
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final CustomClaims claims;
+    private final ClaimsExt claims;
     //------------------------------------------------------------------------------------------------------------------
 
     //------------------------------------------------------------------------------------------------------------------
     // Constructor
     //------------------------------------------------------------------------------------------------------------------
-    public AuthREST(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, CustomClaims claims) {
+    public AuthREST(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder, ClaimsExt claims) {
         this.tokenProvider = tokenProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.claims = claims;

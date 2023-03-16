@@ -1,5 +1,7 @@
 package com.redhood.issuetracker.service.account.permissions;
 
+import com.redhood.issuetracker.repository.account.groups.entity.Groups;
+import com.redhood.issuetracker.repository.account.groups.repository.GroupsRepository;
 import com.redhood.issuetracker.repository.account.permissions.repository.PermissionsRepository;
 import com.redhood.issuetracker.repository.account.permissions.entity.Permissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ public class PermissionsServiceImpl implements PermissionsService{
     // Fields
     //------------------------------------------------------------------------------------------------------------------
     private PermissionsRepository permissionsRepository;
+    private GroupsRepository groupsRepository;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -21,8 +24,9 @@ public class PermissionsServiceImpl implements PermissionsService{
     // Constructor
     //------------------------------------------------------------------------------------------------------------------
     @Autowired
-    public PermissionsServiceImpl(PermissionsRepository permissionsRepository) {
+    public PermissionsServiceImpl(PermissionsRepository permissionsRepository, GroupsRepository groupsRepository) {
         this.permissionsRepository = permissionsRepository;
+        this.groupsRepository = groupsRepository;
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -39,7 +43,9 @@ public class PermissionsServiceImpl implements PermissionsService{
     public Permissions findById(int id) {
         Optional<Permissions> result =  permissionsRepository.findById(id);
         Permissions permission = null;
-        if(result.isPresent()) { permission = result.get(); }
+        if(result.isPresent()) {
+            permission = result.get();
+        }
         return permission;
     }
 
@@ -52,5 +58,14 @@ public class PermissionsServiceImpl implements PermissionsService{
     public void deleteById(int id) {
         permissionsRepository.deleteById(id);
     }
+
+    @Override
+    public Optional<Permissions> findOneByIdGroup(int idGroup) {
+        Groups group = groupsRepository.findById(idGroup).get();
+        Optional<Permissions> result = permissionsRepository.findOneByIdGroup(group);
+        return result;
+
+    }
     //------------------------------------------------------------------------------------------------------------------
+
 }

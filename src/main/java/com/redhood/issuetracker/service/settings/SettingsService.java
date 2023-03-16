@@ -40,5 +40,4 @@ public class SettingsService {
         return settings.get();
     }
 
-
 }

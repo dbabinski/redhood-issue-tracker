@@ -1,6 +1,7 @@
 package com.redhood.issuetracker.service.account.dto;
 
 import com.redhood.issuetracker.repository.account.accounts.entity.Accounts;
+import com.redhood.issuetracker.repository.account.groups.entity.Groups;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -42,6 +43,8 @@ public class AccountsDTO implements Serializable {
     private String lastModifiedBy;
 
     private Instant lastModifiedDate;
+
+    private Groups idGroup;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -62,6 +65,7 @@ public class AccountsDTO implements Serializable {
         this.createdDate = accounts.getCreatedDate();
         this.lastModifiedBy = accounts.getLastModifiedBy();
         this.lastModifiedDate = accounts.getLastModifiedDate();
+        this.idGroup = accounts.getIdGroup();
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -148,6 +152,15 @@ public class AccountsDTO implements Serializable {
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
+
+    public Groups getIdGroup() {
+        return idGroup;
+    }
+
+    public void setIdGroup(Groups idGroup) {
+        this.idGroup = idGroup;
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -167,6 +180,7 @@ public class AccountsDTO implements Serializable {
                 ", createdDate='" + createdDate + '\'' +
                 ", lastModifiedBy='" + lastModifiedBy + '\'' +
                 ", lastModifiedDate='" + lastModifiedDate + '\'' +
+                ", idGroup='" + idGroup + '\'' +
                 '}';
     }
     //------------------------------------------------------------------------------------------------------------------

@@ -315,6 +315,12 @@ BEGIN
     END IF;
     --
     -- ! TODO: to add permission types
+    EXECUTE utilities.add_column('account.permissions', 'manage_user', 'integer');
+    EXECUTE utilities.add_column('account.permissions', 'manage_settings', 'integer');
+    EXECUTE utilities.add_column('account.permissions', 'manage_access', 'integer');
+    INSERT INTO account.permissions (id, id_group, manage_user, manage_settings, manage_access) VALUES (default, 1, 15, 15, 15);
+    INSERT INTO account.permissions (id, id_group, manage_user, manage_settings, manage_access) VALUES (default, 2, 8, 8, 8);
+
     --
     --------------------------------------------------------------------------------------------------------------------
 

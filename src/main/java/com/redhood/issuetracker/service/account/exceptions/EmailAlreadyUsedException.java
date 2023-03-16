@@ -1,4 +1,4 @@
-package com.redhood.issuetracker.service.account.errors;
+package com.redhood.issuetracker.service.account.exceptions;
 
 public class EmailAlreadyUsedException extends RuntimeException{
     public EmailAlreadyUsedException() {

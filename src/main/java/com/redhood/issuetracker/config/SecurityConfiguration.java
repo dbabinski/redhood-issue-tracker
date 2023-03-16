@@ -27,8 +27,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //TODO: Remember to configure !!!
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/public/**").permitAll()
-                .antMatchers("/api/admin/account/accounts").hasAuthority("USER")
-                .antMatchers("/api/admin/account/accounts/{login}").hasAuthority("ADMIN")
+                .antMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .and()
                 .formLogin().permitAll()
                 .and()
