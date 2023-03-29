@@ -2,8 +2,12 @@ package com.redhood.issuetracker.service.account.accounts;
 
 import com.redhood.issuetracker.repository.account.accounts.entity.Accounts;
 import com.redhood.issuetracker.repository.account.accounts.repository.AccountsRepository;
+import com.redhood.issuetracker.repository.account.groups.entity.Groups;
+import com.redhood.issuetracker.repository.account.groups.repository.GroupsRepository;
+import com.redhood.issuetracker.security.SecurityUtils;
 import com.redhood.issuetracker.service.account.dto.AccountsDTO;
 import com.redhood.issuetracker.service.account.exceptions.EmailAlreadyUsedException;
+import com.redhood.issuetracker.service.account.exceptions.InvalidPasswordException;
 import com.redhood.issuetracker.service.account.exceptions.UsernameAlreadyUsedException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -33,6 +37,7 @@ public class AccountsService implements UserDetailsService {
     private final AccountsRepository accountsRepository;
     private final PasswordEncoder passwordEncoder;
     private final Accounts accounts;
+    private final GroupsRepository groups;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -40,10 +45,11 @@ public class AccountsService implements UserDetailsService {
     // Constructor
     //------------------------------------------------------------------------------------------------------------------
     @Autowired
-    public AccountsService(AccountsRepository accountsRepository, PasswordEncoder passwordEncoder, Accounts accounts) {
+    public AccountsService(AccountsRepository accountsRepository, PasswordEncoder passwordEncoder, Accounts accounts, GroupsRepository groups) {
         this.accountsRepository = accountsRepository;
         this.passwordEncoder = passwordEncoder;
         this.accounts = accounts;
+        this.groups = groups;
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -152,6 +158,7 @@ public class AccountsService implements UserDetailsService {
         } else {
             accountsRepository.delete(existingUser);
             accountsRepository.flush();
+            log.debug("Removed non-activated User: {}", existingUser);
             return true;
         }
     }
@@ -176,6 +183,8 @@ public class AccountsService implements UserDetailsService {
         accounts.setResetKey(generateRandomKey());
         accounts.setResetDate(Instant.now());
         accounts.setActivated(true);
+        accounts.setIdGroup(groups.findOneByDefaults(true).get());
+        accounts.setCreatedBy(accountDTO.getCreatedBy().toString());
         accountsRepository.save(accounts);
         log.debug("Created User: {}", accounts);
         return accounts;
@@ -231,8 +240,25 @@ public class AccountsService implements UserDetailsService {
                         user.setEmail(accountsDTO.getEmail().toLowerCase());
                     }
                     user.setActivated(accountsDTO.getActivated());
+                    log.debug("Changed Information for User: {}", user);
                     return user;
                 }).map(AccountsDTO::new);
+    }
+
+    public void updateUser(String firstName, String lastName, String email, String login, Groups groups) {
+        SecurityUtils
+                .getCurrentUserLogin()
+                .flatMap(accountsRepository::findOneByLogin)
+                .ifPresent(user -> {
+                    user.setName(firstName);
+                    user.setLastname(lastName);
+                    if (email != null) {
+                        user.setEmail(email.toLowerCase());
+                    }
+                    user.setIdGroup(groups);
+                    user.setLogin(login);
+                    log.debug("Changed Information for User: {}", user);
+                });
     }
 
     /**
@@ -240,7 +266,11 @@ public class AccountsService implements UserDetailsService {
      * @param id user id.
      */
     public void deleteById(int id) {
-        accountsRepository.deleteById(id);
+        accountsRepository.findById(id)
+                .ifPresent( user -> {
+                    accountsRepository.delete(user);
+                    log.debug("Deleted User: {}", user);
+                });
     }
 
     /**
@@ -255,32 +285,16 @@ public class AccountsService implements UserDetailsService {
                 });
     }
 
-    //TODO: remember to use given methods
-    /*
-    public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        SecurityUtils
-                .getCurrentUserLogin()
-                .flatMap(userRepository::findOneByLogin)
-                .ifPresent(user -> {
-                    user.setFirstName(firstName);
-                    user.setLastName(lastName);
-                    if (email != null) {
-                        user.setEmail(email.toLowerCase());
-                    }
-                    user.setLangKey(langKey);
-                    user.setImageUrl(imageUrl);
-                    log.debug("Changed Information for User: {}", user);
-                });
-    }
-
+    /**
+     * Changing current login user password. User can change own password by entering old and then new password.
+     * @param currentClearTextPassword plain text password
+     * @param newPassword new password
      */
-
-    /*
     @Transactional
     public void changePassword(String currentClearTextPassword, String newPassword) {
         SecurityUtils
                 .getCurrentUserLogin()
-                .flatMap(userRepository::findOneByLogin)
+                .flatMap(accountsRepository::findOneByLogin)
                 .ifPresent(user -> {
                     String currentEncryptedPassword = user.getPassword();
                     if (!passwordEncoder.matches(currentClearTextPassword, currentEncryptedPassword)) {
@@ -291,7 +305,6 @@ public class AccountsService implements UserDetailsService {
                     log.debug("Changed password for User: {}", user);
                 });
     }
-     */
 
     /**
      * Method generate random key.

@@ -13,8 +13,8 @@ public class Auth {
     // Columns
     //------------------------------------------------------------------------------------------------------------------
     @Id
-    @SequenceGenerator(name = "accounts.auth_id_gen", sequenceName = "accounts.auth_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "account.auth_id_gen", sequenceName = "account.auth_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account.auth_id_gen")
     @Basic(optional = false)
     @Column(name = "id")
     private int id;

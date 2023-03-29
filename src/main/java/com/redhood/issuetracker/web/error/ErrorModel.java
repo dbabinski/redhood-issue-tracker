@@ -1,4 +1,4 @@
-package com.redhood.issuetracker.web.errors;
+package com.redhood.issuetracker.web.error;
 
 import java.io.Serializable;
 

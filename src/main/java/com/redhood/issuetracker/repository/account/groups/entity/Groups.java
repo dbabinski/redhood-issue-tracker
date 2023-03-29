@@ -10,14 +10,17 @@ public class Groups {
     // Columns
     //------------------------------------------------------------------------------------------------------------------
     @Id
-    @SequenceGenerator(name = "accounts.groups_id_gen", sequenceName = "accounts.groups_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "account.groups_id_gen", sequenceName = "account.groups_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account.groups_id_gen")
     @Basic(optional = false)
     @Column(name = "id")
     private int id;
 
     @Column(name = "group_name")
     private String groupName;
+
+    @Column(name = "defaults")
+    private boolean defaults;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -26,8 +29,9 @@ public class Groups {
     //------------------------------------------------------------------------------------------------------------------
     public Groups() {}
 
-    public Groups(String groupName) {
+    public Groups(String groupName, boolean defaults) {
         this.groupName = groupName;
+        this.defaults = defaults;
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -50,23 +54,34 @@ public class Groups {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    public boolean isDefaults() {
+        return defaults;
+    }
+
+    public void setDefaults(boolean defaults) {
+        this.defaults = defaults;
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
 
     //------------------------------------------------------------------------------------------------------------------
     // Object
     //------------------------------------------------------------------------------------------------------------------
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Groups groups = (Groups) o;
-        return id == groups.id && Objects.equals(groupName, groups.groupName);
+        return id == groups.id && defaults == groups.defaults && Objects.equals(groupName, groups.groupName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, groupName);
+        return Objects.hash(id, groupName, defaults);
     }
 
     @Override
@@ -74,6 +89,7 @@ public class Groups {
         return "com.redhood.issuetracker.account.groups.entity.Groups{" +
                 "id=" + id +
                 ", groupName='" + groupName + '\'' +
+                ", defaults='" + defaults + '\'' +
                 '}';
     }
     //------------------------------------------------------------------------------------------------------------------

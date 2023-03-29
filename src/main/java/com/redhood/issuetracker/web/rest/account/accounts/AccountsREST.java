@@ -1,7 +1,9 @@
 package com.redhood.issuetracker.web.rest.account.accounts;
 
 import com.redhood.issuetracker.repository.account.accounts.entity.Accounts;
+import com.redhood.issuetracker.repository.account.accounts.repository.AccountsRepository;
 import com.redhood.issuetracker.service.account.accounts.AccountsService;
+import com.redhood.issuetracker.service.account.dto.AccountsDTO;
 import com.redhood.issuetracker.web.utils.ResponseHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/api/admin", produces="application/json")
@@ -21,6 +25,7 @@ public class AccountsREST {
     //------------------------------------------------------------------------------------------------------------------
     private final Logger log = LoggerFactory.getLogger(AccountsREST.class);
     private AccountsService accountsService;
+    private final AccountsRepository accountsRepository;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -28,8 +33,9 @@ public class AccountsREST {
     // Constructor
     //------------------------------------------------------------------------------------------------------------------
     @Autowired
-    public AccountsREST(AccountsService accountsService) {
+    public AccountsREST(AccountsService accountsService, AccountsRepository accountsRepository) {
         this.accountsService = accountsService;
+        this.accountsRepository = accountsRepository;
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -57,7 +63,7 @@ public class AccountsREST {
      * @return the {@link ResponseEntity} with status {@code 200(OK)} and with body containing data (user), message and transaction status.
      */
     @GetMapping("/account/accounts/{login}")
-    public ResponseEntity getAccount(@PathVariable @Pattern(regexp = Accounts.LOGIN_REGEX) String login) {
+    public ResponseEntity getAccountByLogin(@PathVariable @Pattern(regexp = Accounts.LOGIN_REGEX) String login) {
         final Accounts account = accountsService.findByLogin(login);
         if (account.equals(null) || account == null) {
             return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND);
@@ -70,93 +76,70 @@ public class AccountsREST {
     //------------------------------------------------------------------------------------------------------------------
     // REST Controller - POST
     //------------------------------------------------------------------------------------------------------------------
+
     /**
-     * {@code POST /api/admin/account/accounts} : Creates new user.
-     * <p>
-     *
-     * @return
+     * {@code POST /api/admin/acocunt/accounts/} : Create new user.
+     * @param accountsDTO user data
+     * @return the {@link ResponseEntity} with status {@code 200(OK)} and with body containing data (new user), message and transaction status.
      */
-    /*
     @PostMapping("/account/accounts")
-    public ResponseEntity getKonta(@Valid @RequestBody AccountsDTO userDTO) throws URISyntaxException {
-        try {
-            List<Accounts> list = accountsService.findAll()
-                    .stream()
-                    .collect(Collectors.toCollection(LinkedList::new));
-            if (list != null) {
-
-                odpowiedz.setDane(new JSONObject().put(
-                        "accounts", new JSONArray().toList().add(list)
-                ));
-            }
-        } catch (Exception ex) {
-            odpowiedz.setBlad(true).setKomunikat(ex.getMessage());
-        }
-        return ResponseHandler.generateResponse();
-
-
-        log.debug("REST request to save User : {}", userDTO);
-
-        if (userDTO.getId() != null) {
-            throw new BadRequestAlertException("A new user cannot already have an ID", "userManagement", "idexists");
-            // Lowercase the user login before comparing with database
-        } else if (userRepository.findOneByLogin(userDTO.getLogin().toLowerCase()).isPresent()) {
-            throw new LoginAlreadyUsedException();
-        } else if (userRepository.findOneByEmailIgnoreCase(userDTO.getEmail()).isPresent()) {
-            throw new EmailAlreadyUsedException();
+    public ResponseEntity getAccount(@Valid @RequestBody AccountsDTO accountsDTO) {
+        if (accountsDTO.getId() != null) {
+            return ResponseHandler.generateResponse(null, "User cannot already have an ID!", HttpStatus.BAD_REQUEST, accountsDTO);
+        } else if (accountsRepository.findOneByLogin(accountsDTO.getLogin().toLowerCase()).isPresent()) {
+            return ResponseHandler.generateResponse(null, "User login exists!", HttpStatus.BAD_REQUEST, accountsDTO);
+        } else if (accountsRepository.findOneByEmailIgnoreCase(accountsDTO.getEmail()).isPresent()) {
+            return ResponseHandler.generateResponse(null, "User email exists!!", HttpStatus.BAD_REQUEST, accountsDTO);
         } else {
-            User newUser = userService.createUser(userDTO);
-            mailService.sendCreationEmail(newUser);
-            return ResponseEntity
-                    .created(new URI("/api/admin/users/" + newUser.getLogin()))
-                    .headers(
-                            HeaderUtil.createAlert(applicationName, "A user is created with identifier " + newUser.getLogin(), newUser.getLogin())
-                    )
-                    .body(newUser);
+            Accounts newUser = accountsService.createAccount(accountsDTO);
+            return ResponseHandler.generateResponse(HttpStatus.OK, newUser);
         }
-
-
     }
 
-     */
-
-    /*
-    @PostMapping("/account/accounts/")
-    public Accounts addAccount(@RequestBody Accounts accounts) {
-        accounts.setId(0);
-        accountsService.save(accounts);
-        return accounts;
-    }
-
-    */
     //------------------------------------------------------------------------------------------------------------------
     // REST Controller - PUT
     //------------------------------------------------------------------------------------------------------------------
-    /*
+
+    /**
+     * {@code PUT /api/admin/acocunt/accounts/} : Update user data.
+     * @param accountsDTO user details for change.
+     * @return the {@link ResponseEntity} with status {@code 200(OK)} and with body containing data (new user), message and transaction status.
+     */
     @PutMapping("/account/accounts/")
-    public Accounts updateAccount(@RequestBody Accounts accounts) {
-        accountsService.save(accounts);
-        return accounts;
+    public ResponseEntity updateAccount(@Valid @RequestBody AccountsDTO accountsDTO) {
+        Optional<Accounts> existingUser = accountsRepository.findOneByEmailIgnoreCase(accountsDTO.getEmail());
+        if (existingUser.isPresent() && (!existingUser.get().getId().equals(accountsDTO.getId()))) {
+            return ResponseHandler.generateResponse(null, "User email cannot be the same!", HttpStatus.BAD_REQUEST, accountsDTO);
+        }
+        existingUser = accountsRepository.findOneByLogin(accountsDTO.getLogin().toLowerCase());
+        if (existingUser.isPresent() && (!existingUser.get().getId().equals(accountsDTO.getId()))) {
+            return ResponseHandler.generateResponse(null, "User login cannot be the same!", HttpStatus.BAD_REQUEST, accountsDTO);
+        }
+        Optional<AccountsDTO> updateUser = accountsService.updateAccount(accountsDTO);
+        return ResponseHandler.generateResponse(HttpStatus.OK, updateUser);
     }
-    */
     //------------------------------------------------------------------------------------------------------------------
 
 
     //------------------------------------------------------------------------------------------------------------------
     // REST Controller - DELETE
     //------------------------------------------------------------------------------------------------------------------
-    /*
-    @DeleteMapping("/account/accounts/{accountId}")
-    public String deleteAccount(@PathVariable int accountId) {
-        Accounts account = accountsService.findById(accountId);
+
+    /**
+     * Delete user by login.
+     * @param login user login
+     * @return the {@link ResponseEntity} with status {@code 200(OK)} and with body containing deleted (user), message and transaction status.
+     */
+    @DeleteMapping("/account/accounts/{login}")
+    public ResponseEntity deleteAccount(@PathVariable @Pattern(regexp = Accounts.LOGIN_REGEX) String login) {
+        Accounts account = accountsService.findByLogin(login);
         if (account == null) {
-            //throw new ErrorException("Account id: " + accountId + ", not found!");
-            return null;
+            return ResponseHandler.generateResponse(HttpStatus.NOT_FOUND, login);
         } else {
-            accountsService.deleteById(accountId);
-            return "Deleted customer id: " + accountId;
+            accountsService.deleteByLogin(login);
+            log.debug("User login: {} deleted", login);
+            return ResponseHandler.generateResponse(HttpStatus.OK, account);
         }
     }
-    */
     //------------------------------------------------------------------------------------------------------------------
 }

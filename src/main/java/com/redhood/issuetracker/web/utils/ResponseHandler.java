@@ -84,8 +84,21 @@ public class ResponseHandler {
     public static ResponseEntity<Object> generateResponseJWT(HttpHeaders httpHeaders, String message, HttpStatus status, Object responseObj, Object customClaims) {
         Map<String, Object> map = new HashMap<String, Object>();
 
+        map.put("message", message);
+        map.put("status", status);
+
         //TODO: generateResponseJWT
         return new ResponseEntity<Object>(map, httpHeaders, status);
+    }
+
+    public static ResponseEntity<Object> generateResponseJWT(String message, HttpStatus status, Object responseObj) {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("message", message);
+        map.put("status", status);
+
+        //TODO: generateResponseJWT
+        return new ResponseEntity<Object>(map, status);
     }
     //------------------------------------------------------------------------------------------------------------------
 }

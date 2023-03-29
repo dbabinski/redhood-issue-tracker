@@ -175,6 +175,7 @@ public class TokenProvider {
     private JSONObject getPermissionsJSON(Permissions permissions) {
         JSONObject jsonb = new JSONObject();
         try {
+            if (permissions.getIdGroup() != null) {
             for (String permision : Permissions.PERMISSIONS_LIST) {
                 Field field = Permissions.class.getDeclaredField(permision);
                 field.setAccessible(true);
@@ -184,6 +185,10 @@ public class TokenProvider {
                         .put("add", permissionsH.isAdd())
                         .put("delete", permissionsH.isDelete())
                         .put("update", permissionsH.isUpdate()));
+                }
+            } else {
+                jsonb.put("permission_is_empty", new JSONObject());
+                return jsonb;
             }
             return jsonb;
         } catch (NoSuchFieldException | IllegalAccessException e) {

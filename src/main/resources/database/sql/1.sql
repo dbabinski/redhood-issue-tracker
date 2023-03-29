@@ -260,6 +260,7 @@ BEGIN
         );
     END IF;
     EXECUTE utilities.add_column('account.groups', 'group_name', 'text');
+    EXECUTE utilities.add_column('account.groups', 'defaults', 'boolean');
     --------------------------------------------------------------------------------------------------------------------
 
     -- | creates 'accounts' table, that provide user data

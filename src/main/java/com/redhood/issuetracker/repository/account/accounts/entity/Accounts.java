@@ -31,8 +31,8 @@ public class Accounts extends AbstractEntity<Integer> implements Serializable, U
     // Columns
     //------------------------------------------------------------------------------------------------------------------
     @Id
-    @SequenceGenerator(name = "accounts.account_id_gen", sequenceName = "accounts.account_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "account.accounts_id_gen", sequenceName = "account.accounts_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account.accounts_id_gen")
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;

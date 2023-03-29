@@ -14,8 +14,8 @@ public class Permissions {
     // Columns
     //------------------------------------------------------------------------------------------------------------------
     @Id
-    @SequenceGenerator(name = "accounts.permissions_id_gen", sequenceName = "accounts.permissions_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "account.permissions_id_gen", sequenceName = "account.permissions_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account.permissions_id_gen")
     @Basic(optional = false)
     @Column(name = "id")
     private int id;

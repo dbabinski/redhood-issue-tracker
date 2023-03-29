@@ -8,5 +8,7 @@ import java.util.Optional;
 public interface GroupsRepository extends JpaRepository<Groups, Integer> {
 
     Optional<Groups> findOneByGroupName(String groupName);
+    
+    Optional<Groups> findOneByDefaults(boolean defaults);
 
 }
