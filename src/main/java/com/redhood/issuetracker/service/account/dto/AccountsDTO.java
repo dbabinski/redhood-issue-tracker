@@ -45,6 +45,8 @@ public class AccountsDTO implements Serializable {
     private Instant lastModifiedDate;
 
     private Groups idGroup;
+
+    private boolean blocked;
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -66,6 +68,7 @@ public class AccountsDTO implements Serializable {
         this.lastModifiedBy = accounts.getLastModifiedBy();
         this.lastModifiedDate = accounts.getLastModifiedDate();
         this.idGroup = accounts.getIdGroup();
+        this.blocked = accounts.getBlocked() != null ? true : false;
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -161,6 +164,13 @@ public class AccountsDTO implements Serializable {
         this.idGroup = idGroup;
     }
 
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -181,6 +191,7 @@ public class AccountsDTO implements Serializable {
                 ", lastModifiedBy='" + lastModifiedBy + '\'' +
                 ", lastModifiedDate='" + lastModifiedDate + '\'' +
                 ", idGroup='" + idGroup + '\'' +
+                ", blocked='" + blocked + '\'' +
                 '}';
     }
     //------------------------------------------------------------------------------------------------------------------

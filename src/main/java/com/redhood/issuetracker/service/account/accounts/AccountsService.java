@@ -234,12 +234,14 @@ public class AccountsService implements UserDetailsService {
                 .map(Optional::get)
                 .map(user -> {
                     user.setLogin(accountsDTO.getLogin().toLowerCase());
-                    user.setName(accountsDTO.getName());
-                    user.setLastname(accountsDTO.getLastname());
                     if (accountsDTO.getEmail() != null) {
                         user.setEmail(accountsDTO.getEmail().toLowerCase());
                     }
                     user.setActivated(accountsDTO.getActivated());
+                    user.setBlocked(accountsDTO.isBlocked() == true ? Instant.now() : null);
+                    user.setName(accountsDTO.getName());
+                    user.setLastname(accountsDTO.getLastname());
+                    user.setIdGroup(accountsDTO.getIdGroup());
                     log.debug("Changed Information for User: {}", user);
                     return user;
                 }).map(AccountsDTO::new);

@@ -107,14 +107,6 @@ public class AccountsREST {
      */
     @PutMapping("/account/accounts/")
     public ResponseEntity updateAccount(@Valid @RequestBody AccountsDTO accountsDTO) {
-        Optional<Accounts> existingUser = accountsRepository.findOneByEmailIgnoreCase(accountsDTO.getEmail());
-        if (existingUser.isPresent() && (!existingUser.get().getId().equals(accountsDTO.getId()))) {
-            return ResponseHandler.generateResponse(null, "User email cannot be the same!", HttpStatus.BAD_REQUEST, accountsDTO);
-        }
-        existingUser = accountsRepository.findOneByLogin(accountsDTO.getLogin().toLowerCase());
-        if (existingUser.isPresent() && (!existingUser.get().getId().equals(accountsDTO.getId()))) {
-            return ResponseHandler.generateResponse(null, "User login cannot be the same!", HttpStatus.BAD_REQUEST, accountsDTO);
-        }
         Optional<AccountsDTO> updateUser = accountsService.updateAccount(accountsDTO);
         return ResponseHandler.generateResponse(HttpStatus.OK, updateUser);
     }
