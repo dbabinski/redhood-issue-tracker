@@ -247,7 +247,7 @@ public class AccountsService implements UserDetailsService {
                 }).map(AccountsDTO::new);
     }
 
-    public void updateUser(String firstName, String lastName, String email, String login, Groups groups) {
+    public void updateUser(String firstName, String lastName, String email, String login) {
         SecurityUtils
                 .getCurrentUserLogin()
                 .flatMap(accountsRepository::findOneByLogin)
@@ -257,7 +257,6 @@ public class AccountsService implements UserDetailsService {
                     if (email != null) {
                         user.setEmail(email.toLowerCase());
                     }
-                    user.setIdGroup(groups);
                     user.setLogin(login);
                     log.debug("Changed Information for User: {}", user);
                 });
@@ -317,7 +316,15 @@ public class AccountsService implements UserDetailsService {
     }
     //------------------------------------------------------------------------------------------------------------------
 
+    @Transactional(readOnly = true)
+    public Optional<Accounts> getUserWithAuthoritiesByLogin(String login) {
+        return accountsRepository.findOneWithAuthoritiesByLogin(login);
+    }
 
+    @Transactional(readOnly = true)
+    public Optional<Accounts> getUserWithAuthorities() {
+        return SecurityUtils.getCurrentUserLogin().flatMap(accountsRepository::findOneByLogin);
+    }
     //------------------------------------------------------------------------------------------------------------------
     // UserDetailsService
     //------------------------------------------------------------------------------------------------------------------
